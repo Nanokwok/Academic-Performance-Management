@@ -141,9 +141,12 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def resize(self, event):
         self.button_frame.grid_configure(sticky="nsew")
         self.data_frame.grid_configure(sticky="nsew")
+        self.canvas.config(width=self.data_frame.winfo_width(), height=self.data_frame.winfo_height())
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        self.vsb.config(command=self.canvas.yview)  # Update the scrollbar command
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=0)
+        self.grid_columnconfigure(1, weight=0)  # Prevent the right column from resizing
 
     def resize_canvas(self, event):
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
