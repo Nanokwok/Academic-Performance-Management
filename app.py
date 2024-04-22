@@ -68,8 +68,8 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.input_box = ttk.Entry(self.add_del_frame)
         self.input_box.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.add_button = ttk.Button(self.add_del_frame, text="Add Student", command=self.add_student)
-        self.add_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        # self.add_button = ttk.Button(self.add_del_frame, text="Add Student", command=self.add_student)
+        # self.add_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
         self.delete_button = ttk.Button(self.add_del_frame, text="Delete Student", command=self.delete_student)
         self.delete_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
@@ -115,7 +115,11 @@ class AcademicPerformanceManagementApp(tk.Tk):
         pass
 
     def delete_student(self):
-        pass
+        selected_item = self.tree.focus()
+        if selected_item:
+            self.tree.delete(selected_item)
+        else:
+            messagebox.showwarning("Warning", "Please select a student to delete.")
 
     def group_students(self):
         pass
