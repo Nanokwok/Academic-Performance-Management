@@ -105,11 +105,14 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.individual_button = ttk.Button(self.stats_frame, text="Individual", command=self.show_individual_statistics)
-        self.individual_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        # self.individual_button = ttk.Button(self.stats_frame, text="Individual", command=self.show_individual_statistics)
+        # self.individual_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.multiple_button = ttk.Button(self.stats_frame, text="Multiple", command=self.show_multiple_statistics)
-        self.multiple_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+        self.selected_button = ttk.Button(self.stats_frame, text="Selected Student", command=self.show_selected_statistics)
+        self.selected_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+
+        self.allstu_button = ttk.Button(self.stats_frame, text="All Student", command=self.show_all_statistics)
+        self.allstu_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
     def add_student(self):
         pass
@@ -127,36 +130,87 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def generate_graphs(self):
         pass
 
-    def show_individual_statistics(self):
-        selected_id = self.tree.focus()
-        if selected_id:
-            student_id = self.tree.item(selected_id, "text")
-            scores_str = self.tree.item(selected_id, "values")[1:]
+    # def show_individual_statistics(self):
+    #     selected_id = self.tree.focus()
+    #     if selected_id:
+    #         student_id = self.tree.item(selected_id, "text")
+    #         scores_str = self.tree.item(selected_id, "values")[1:]
+    #
+    #         scores = []
+    #         for score in scores_str:
+    #             if score:
+    #                 scores.append(int(score))
+    #
+    #         maxx = max(scores)
+    #         minn = min(scores)
+    #         avg = statistics.mean(scores)
+    #         stdev = statistics.stdev(scores)
+    #
+    #         statistics_func = tk.Toplevel(self)
+    #         statistics_func.title(f"Statistics for Student ID {student_id}")
+    #
+    #         tk.Label(statistics_func, text="Statistics:").pack()
+    #         tk.Label(statistics_func, text=f"Student ID: {student_id}").pack()
+    #         tk.Label(statistics_func, text=f"Max Score: {maxx}").pack()
+    #         tk.Label(statistics_func, text=f"Min Score: {minn}").pack()
+    #         tk.Label(statistics_func, text=f"Avg Score: {avg}").pack()
+    #         tk.Label(statistics_func, text=f"Standard Deviation: {stdev}").pack()
+    #     else:
+    #         messagebox.showwarning("Warning", "Please select a student to view statistics.")
 
-            scores = []
-            for score in scores_str:
-                if score:
-                    scores.append(int(score))
+    def show_selected_statistics(self):
+        selected_items = self.tree.selection()
+        if selected_items:
+            statistics_window = tk.Toplevel(self)
+            statistics_window.title("Statistics for Selected Students")
 
-            maxx = max(scores)
-            minn = min(scores)
-            avg = statistics.mean(scores)
-            stdev = statistics.stdev(scores)
+            statistics_tree = ttk.Treeview(statistics_window, columns=["Max Score", "Min Score", "Avg Score", "Stdev Score"])
+            statistics_tree.heading("#0", text="Student ID")
+            statistics_tree.heading("#1", text="Max Score")
+            statistics_tree.heading("#2", text="Min Score")
+            statistics_tree.heading("#3", text="Avg Score")
+            statistics_tree.heading("#4", text="Stdev Score")
 
-            statistics_func = tk.Toplevel(self)
-            statistics_func.title(f"Statistics for Student ID {student_id}")
+            for selected_item in selected_items:
+                student_id = self.tree.item(selected_item, "text")
+                scores_str = self.tree.item(selected_item, "values")[1:]
+                scores = [int(score) for score in scores_str]
 
-            tk.Label(statistics_func, text="Statistics:").pack()
-            tk.Label(statistics_func, text=f"Student ID: {student_id}").pack()
-            tk.Label(statistics_func, text=f"Max Score: {maxx}").pack()
-            tk.Label(statistics_func, text=f"Min Score: {minn}").pack()
-            tk.Label(statistics_func, text=f"Avg Score: {avg}").pack()
-            tk.Label(statistics_func, text=f"Standard Deviation: {stdev}").pack()
+                max_score = max(scores)
+                min_score = min(scores)
+                avg_score = statistics.mean(scores)
+                stdev_score = statistics.stdev(scores)
+
+                statistics_tree.insert("", "end", text=student_id, values=(max_score, min_score, avg_score, stdev_score))
+
+            statistics_tree.pack(expand=True, fill="both")
         else:
-            messagebox.showwarning("Warning", "Please select a student to view statistics.")
+            messagebox.showwarning("Warning", "Please select one or more students to view statistics.")
 
-    def show_multiple_statistics(self):
-        pass
+    def show_all_statistics(self):
+        statistics_window = tk.Toplevel(self)
+        statistics_window.title("Statistics for All Students")
+
+        statistics_tree = ttk.Treeview(statistics_window, columns=["Max Score", "Min Score", "Avg Score", "Stdev Score"])
+        statistics_tree.heading("#0", text="Student ID")
+        statistics_tree.heading("#1", text="Max Score")
+        statistics_tree.heading("#2", text="Min Score")
+        statistics_tree.heading("#3", text="Avg Score")
+        statistics_tree.heading("#4", text="Stdev Score")
+
+        for child in self.tree.get_children():
+            student_id = self.tree.item(child, "text")
+            scores_str = self.tree.item(child, "values")[1:]
+            scores = [int(score) for score in scores_str]
+
+            max_score = max(scores)
+            min_score = min(scores)
+            avg_score = statistics.mean(scores)
+            stdev_score = statistics.stdev(scores)
+
+            statistics_tree.insert("", "end", text=student_id, values=(max_score, min_score, avg_score, stdev_score))
+
+        statistics_tree.pack(expand=True, fill="both")
 
     def import_data(self):
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
