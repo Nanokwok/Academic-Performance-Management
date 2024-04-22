@@ -34,6 +34,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.tree = ttk.Treeview(self.frame,
                                  columns=["ID", "Test 1", "Test 2", "Test 3", "Test 4", "Test 5", "Test 6", "Test 7",
                                           "Test 8", "Test 9", "Test 10", "Test 11", "Test 12"])
+
         self.tree.heading("#0", text="Student ID")
         for i in range(1, 13):
             self.tree.heading(f"#{i}", text=f"Test {i}")
@@ -143,10 +144,10 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.data_frame.grid_configure(sticky="nsew")
         self.canvas.config(width=self.data_frame.winfo_width(), height=self.data_frame.winfo_height())
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
-        self.vsb.config(command=self.canvas.yview)  # Update the scrollbar command
+        self.vsb.config(command=self.canvas.yview)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=0)  # Prevent the right column from resizing
+        self.grid_columnconfigure(1, weight=0)
 
     def resize_canvas(self, event):
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
