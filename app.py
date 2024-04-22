@@ -1,14 +1,13 @@
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 import csv
-
+import statistics
 
 class AcademicPerformanceManagementApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Academic Performance Management")
 
-        # Configure grid weights
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
@@ -54,7 +53,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.canvas.bind("<Configure>", self.resize_canvas)
 
     def create_buttons(self):
-        # Add Import Data button
         self.import_button = ttk.Button(self.button_frame, text="Import Data", command=self.import_data)
         self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
@@ -107,10 +105,10 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.individual_button = ttk.Button(self.stats_frame, text="Individual", command=self.show_statistics)
+        self.individual_button = ttk.Button(self.stats_frame, text="Individual", command=self.show_individual_statistics)
         self.individual_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.multiple_button = ttk.Button(self.stats_frame, text="Multiple", command=self.show_statistics)
+        self.multiple_button = ttk.Button(self.stats_frame, text="Multiple", command=self.show_multiple_statistics)
         self.multiple_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
     def add_student(self):
@@ -125,7 +123,35 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def generate_graphs(self):
         pass
 
-    def show_statistics(self):
+    def show_individual_statistics(self):
+        selected_id = self.tree.focus()
+        if selected_id:
+            student_id = self.tree.item(selected_id, "text")
+            scores_str = self.tree.item(selected_id, "values")[1:]
+
+            scores = []
+            for score in scores_str:
+                if score:
+                    scores.append(int(score))
+
+            maxx = max(scores)
+            minn = min(scores)
+            avg = statistics.mean(scores)
+            stdev = statistics.stdev(scores)
+
+            statistics_func = tk.Toplevel(self)
+            statistics_func.title(f"Statistics for Student ID {student_id}")
+
+            tk.Label(statistics_func, text="Statistics:").pack()
+            tk.Label(statistics_func, text=f"Student ID: {student_id}").pack()
+            tk.Label(statistics_func, text=f"Max Score: {maxx}").pack()
+            tk.Label(statistics_func, text=f"Min Score: {minn}").pack()
+            tk.Label(statistics_func, text=f"Avg Score: {avg}").pack()
+            tk.Label(statistics_func, text=f"Standard Deviation: {stdev}").pack()
+        else:
+            messagebox.showwarning("Warning", "Please select a student to view statistics.")
+
+    def show_multiple_statistics(self):
         pass
 
     def import_data(self):
