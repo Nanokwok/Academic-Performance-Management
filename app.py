@@ -214,8 +214,19 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 plt.xlabel("Test")
                 plt.ylabel("Score")
                 plt.title("Scatterplot")
-                plt.legend()
+                # plt.legend()
                 plt.show()
+
+                scatterplot_window = tk.Toplevel(self)
+                scatterplot_window.title("Scatterplot")
+
+                canvas = FigureCanvasTkAgg(fig, master=scatterplot_window)
+                canvas.draw()
+                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                toolbar = NavigationToolbar2Tk(canvas, scatterplot_window)
+                toolbar.update()
+                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
             else:
                 messagebox.showerror("Error", "Invalid graph type selected.")
