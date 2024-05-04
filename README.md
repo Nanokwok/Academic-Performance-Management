@@ -1,4 +1,5 @@
-# About the project
+# Academic Performance Management Program
+## About the project
 
 [//]: # ([![Django CI]&#40;https://github.com/Nanokwok/Academic-Performance-Management/actions/workflows/django.yml/badge.svg&#41;]&#40;https://github.com/Nanokwok/Academic-Performance-Management/actions/workflows/django.yml&#41;)
 
