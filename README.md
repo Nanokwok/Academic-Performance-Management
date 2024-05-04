@@ -25,3 +25,10 @@ Clone the repository:
 ```bash
 git clone https://github.com/Nanokwok/Academic-Performance-Management.git
 cd Academic-Performance-Management
+```
+
+## Project Documents
+
+- [Project Proposal](https://docs.google.com/document/d/11R-iiaoxBM3uOUnmBL-wqdtW7__TCA-o9l3oWIvOjXE/edit?usp=sharing)
+- [Development Plan](https://github.com/Nanokwok/Academic-Performance-Management/wiki/Weekly-Plan)
+
