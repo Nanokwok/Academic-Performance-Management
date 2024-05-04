@@ -11,10 +11,17 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Academic Performance Management")
+        width = self.winfo_screenwidth()
+        hight = self.winfo_screenheight()
+
+        self.geometry(f"{width}x{hight}")
+        # self.configure(width=self.winfo_width())
+        # print(width, hight)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
+
 
         self.data_frame = ttk.Frame(self)
         self.data_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -26,6 +33,8 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.create_buttons()
 
         self.bind("<Configure>", self.resize)
+
+        self.import_data()
 
     def create_student_data_table(self):
         self.data_frame.grid_rowconfigure(0, weight=1)
@@ -316,7 +325,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.allstu_button["state"] = "disabled"
 
     def import_data(self):
-        file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
+        file_path = "student_marks.csv"
         if file_path:
             for child in self.tree.get_children():
                 self.tree.delete(child)
@@ -337,7 +346,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.data_frame.grid_configure(sticky="nsew")
         # self.canvas.config(width=self.data_frame.winfo_width(), height=self.data_frame.winfo_height())
         # self.canvas.config(scrollregion=self.canvas.bbox("all"))
-        self.vsb.config(command=self.canvas.yview)
+        # self.vsb.config(command=self.canvas.yview)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
