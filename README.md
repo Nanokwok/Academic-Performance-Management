@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ```
 2. Run the application:
 ```bash
-python APM.py
+python main.py
 ```
 
 ## Project Documents
