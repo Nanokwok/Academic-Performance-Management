@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import csv
 import statistics
+import matplotlib.pyplot as plt
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 
 class AcademicPerformanceManagementApp(tk.Tk):
     def __init__(self):
@@ -24,37 +28,31 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.bind("<Configure>", self.resize)
 
     def create_student_data_table(self):
-        self.canvas = tk.Canvas(self.data_frame)
-        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.data_frame.grid_rowconfigure(0, weight=1)
+        self.data_frame.grid_columnconfigure(0, weight=1)
 
-        self.frame = ttk.Frame(self.canvas)
-        self.canvas.create_window((0, 0), window=self.frame, anchor="nw")
-
-        self.tree = ttk.Treeview(self.frame,
+        self.tree = ttk.Treeview(self.data_frame,
                                  columns=["ID", "Test 1", "Test 2", "Test 3", "Test 4", "Test 5", "Test 6", "Test 7",
-                                          "Test 8", "Test 9", "Test 10", "Test 11", "Test 12"])
+                                          "Test 8", "Test 9", "Test 10", "Test 11", "Test 12"], show="headings")
 
-        self.tree.heading("#0", text="Student ID")
+        self.tree.heading("ID", text="Student ID", anchor="center")
+
         for i in range(1, 13):
-            self.tree.heading(f"#{i}", text=f"Test {i}")
-        self.tree.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+            self.tree.heading(f"Test {i}", text=f"Test {i}")
 
-        self.vsb = ttk.Scrollbar(self.data_frame, orient="vertical", command=self.canvas.yview)
+        self.tree.grid(row=0, column=0, sticky="nsew")
+
+        self.vsb = ttk.Scrollbar(self.data_frame, orient="vertical", command=self.tree.yview)
         self.vsb.grid(row=0, column=1, sticky="ns")
-        self.canvas.configure(yscrollcommand=self.vsb.set)
+        self.tree.configure(yscrollcommand=self.vsb.set)
 
-        self.hsb = ttk.Scrollbar(self.data_frame, orient="horizontal", command=self.canvas.xview)
+        self.hsb = ttk.Scrollbar(self.data_frame, orient="horizontal", command=self.tree.xview)
         self.hsb.grid(row=1, column=0, sticky="ew")
-        self.canvas.configure(xscrollcommand=self.hsb.set)
-
-        self.frame.update_idletasks()
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
-
-        self.canvas.bind("<Configure>", self.resize_canvas)
+        self.tree.configure(xscrollcommand=self.hsb.set)
 
     def create_buttons(self):
-        self.import_button = ttk.Button(self.button_frame, text="Import Data", command=self.import_data)
-        self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        # self.import_button = ttk.Button(self.button_frame, text="Import Data", command=self.import_data)
+        # self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.create_add_del_buttons()
         self.create_group_buttons()
@@ -65,8 +63,11 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.add_del_frame = ttk.LabelFrame(self.button_frame, text="Add/Del student")
         self.add_del_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.input_box = ttk.Entry(self.add_del_frame)
-        self.input_box.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+        # self.input_box = ttk.Entry(self.add_del_frame)
+        # self.input_box.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+
+        self.import_button = ttk.Button(self.add_del_frame, text="Import Data", command=self.import_data)
+        self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         # self.add_button = ttk.Button(self.add_del_frame, text="Add Student", command=self.add_student)
         # self.add_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
@@ -105,14 +106,18 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
-        # self.individual_button = ttk.Button(self.stats_frame, text="Individual", command=self.show_individual_statistics)
+        # self.individual_button = ttk.Button(self.stats_frame, text="Individual",
+        # command=self.show_individual_statistics)
         # self.individual_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.selected_button = ttk.Button(self.stats_frame, text="Selected Student", command=self.show_selected_statistics)
+        self.selected_button = ttk.Button(self.stats_frame, text="Selected Student",
+                                          command=self.show_selected_statistics)
         self.selected_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.allstu_button = ttk.Button(self.stats_frame, text="All Student", command=self.show_all_statistics)
         self.allstu_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+
+        self.disable_all_students_button()
 
     def add_student(self):
         pass
@@ -128,7 +133,86 @@ class AcademicPerformanceManagementApp(tk.Tk):
         pass
 
     def generate_graphs(self):
-        pass
+        graph_window = tk.Toplevel(self)
+        graph_window.title("Generate Graph")
+
+        graph_type_label = ttk.Label(graph_window, text="Select Graph Type:")
+        graph_type_label.grid(row=0, column=0, padx=5, pady=5)
+
+        graph_type_var = tk.StringVar()
+        graph_type_combobox = ttk.Combobox(graph_window, textvariable=graph_type_var, state="readonly",
+                                           values=["Bar Chart", "Histogram", "Scatterplot"])
+        graph_type_combobox.current(0)
+        graph_type_combobox.grid(row=0, column=1, padx=5, pady=5)
+
+        def generate_graph():
+            selected_graph_type = graph_type_var.get()
+            selected_items = self.tree.selection()
+            if not selected_items:
+                messagebox.showwarning("Warning", "Please select one or more students to generate the graph.")
+                return
+
+            scores_dict = {}
+            for selected_item in selected_items:
+                student_id = self.tree.item(selected_item, "text")
+                scores_str = self.tree.item(selected_item, "values")[1:]
+                scores = [int(score) for score in scores_str]
+                scores_dict[student_id] = scores
+
+            fig, ax = plt.subplots()
+            if selected_graph_type == "Bar Chart":
+                # Generate Bar Chart
+                for student_id, scores in scores_dict.items():
+                    ax.bar(range(1, len(scores) + 1), scores, label=student_id)
+                ax.set_xlabel("Test")
+                ax.set_ylabel("Score")
+                ax.set_title("Bar Chart")
+                # ax.legend()
+
+                bar_graph_window = tk.Toplevel(self)
+                bar_graph_window.title("Bar Graph")
+
+                canvas = FigureCanvasTkAgg(fig, master=bar_graph_window)
+                canvas.draw()
+                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                toolbar = NavigationToolbar2Tk(canvas, bar_graph_window)
+                toolbar.update()
+                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+            elif selected_graph_type == "Histogram":
+                for student_id, scores in scores_dict.items():
+                    ax.hist(scores, bins=10, alpha=0.5, label=student_id)
+                ax.set_xlabel("Score")
+                ax.set_ylabel("Frequency")
+                ax.set_title("Histogram")
+                # ax.legend()
+
+                histogram_window = tk.Toplevel(self)
+                histogram_window.title("Histogram")
+
+                canvas = FigureCanvasTkAgg(fig, master=histogram_window)
+                canvas.draw()
+                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                toolbar = NavigationToolbar2Tk(canvas, histogram_window)
+                toolbar.update()
+                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+            elif selected_graph_type == "Scatterplot":
+                for student_id, scores in scores_dict.items():
+                    plt.scatter(range(1, len(scores) + 1), scores, label=student_id)
+                plt.xlabel("Test")
+                plt.ylabel("Score")
+                plt.title("Scatterplot")
+                plt.legend()
+                plt.show()
+
+            else:
+                messagebox.showerror("Error", "Invalid graph type selected.")
+
+        generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph)
+        generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
     # def show_individual_statistics(self):
     #     selected_id = self.tree.focus()
@@ -164,12 +248,15 @@ class AcademicPerformanceManagementApp(tk.Tk):
             statistics_window = tk.Toplevel(self)
             statistics_window.title("Statistics for Selected Students")
 
-            statistics_tree = ttk.Treeview(statistics_window, columns=["Max Score", "Min Score", "Avg Score", "Stdev Score"])
+            statistics_tree = ttk.Treeview(statistics_window,
+                                           columns=["Max Score", "Min Score", "Avg Score", "Median Score",
+                                                    "Stdev Score"])
             statistics_tree.heading("#0", text="Student ID")
             statistics_tree.heading("#1", text="Max Score")
             statistics_tree.heading("#2", text="Min Score")
             statistics_tree.heading("#3", text="Avg Score")
-            statistics_tree.heading("#4", text="Stdev Score")
+            statistics_tree.heading("#4", text="Median Score")
+            statistics_tree.heading("#5", text="Stdev Score")
 
             for selected_item in selected_items:
                 student_id = self.tree.item(selected_item, "text")
@@ -179,24 +266,32 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 max_score = max(scores)
                 min_score = min(scores)
                 avg_score = statistics.mean(scores)
+                median_score = statistics.median(scores)
                 stdev_score = statistics.stdev(scores)
 
-                statistics_tree.insert("", "end", text=student_id, values=(max_score, min_score, avg_score, stdev_score))
+                statistics_tree.insert("", "end", text=student_id,
+                                       values=(max_score, min_score, avg_score, median_score, stdev_score))
 
             statistics_tree.pack(expand=True, fill="both")
         else:
             messagebox.showwarning("Warning", "Please select one or more students to view statistics.")
 
     def show_all_statistics(self):
+        if not self.tree.get_children():
+            messagebox.showwarning("Warning", "No data available. Please import data first.")
+            return
+
         statistics_window = tk.Toplevel(self)
         statistics_window.title("Statistics for All Students")
 
-        statistics_tree = ttk.Treeview(statistics_window, columns=["Max Score", "Min Score", "Avg Score", "Stdev Score"])
+        statistics_tree = ttk.Treeview(statistics_window,
+                                       columns=["Max Score", "Min Score", "Avg Score", "Median Score", "Stdev Score"])
         statistics_tree.heading("#0", text="Student ID")
         statistics_tree.heading("#1", text="Max Score")
         statistics_tree.heading("#2", text="Min Score")
         statistics_tree.heading("#3", text="Avg Score")
-        statistics_tree.heading("#4", text="Stdev Score")
+        statistics_tree.heading("#4", text="Median Score")
+        statistics_tree.heading("#5", text="Stdev Score")
 
         for child in self.tree.get_children():
             student_id = self.tree.item(child, "text")
@@ -206,11 +301,19 @@ class AcademicPerformanceManagementApp(tk.Tk):
             max_score = max(scores)
             min_score = min(scores)
             avg_score = statistics.mean(scores)
+            median_score = statistics.median(scores)
             stdev_score = statistics.stdev(scores)
 
-            statistics_tree.insert("", "end", text=student_id, values=(max_score, min_score, avg_score, stdev_score))
+            statistics_tree.insert("", "end", text=student_id,
+                                   values=(max_score, min_score, avg_score, median_score, stdev_score))
 
         statistics_tree.pack(expand=True, fill="both")
+
+    def enable_all_students_button(self):
+        self.allstu_button["state"] = "normal"
+
+    def disable_all_students_button(self):
+        self.allstu_button["state"] = "disabled"
 
     def import_data(self):
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv"), ("All files", "*.*")])
@@ -219,15 +322,21 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 self.tree.delete(child)
             with open(file_path, "r") as file:
                 reader = csv.reader(file)
-                next(reader)
+                header = next(reader)
                 for row in reader:
-                    self.tree.insert("", "end", text=row[0], values=row[1:])
+                    student_id = row[0]
+                    scores = row[1:]
+                    self.tree.insert("", "end", text=student_id, values=scores)
+
+            self.tree.column("#0", width=100, anchor="center")
+
+            self.enable_all_students_button()
 
     def resize(self, event):
         self.button_frame.grid_configure(sticky="nsew")
         self.data_frame.grid_configure(sticky="nsew")
-        self.canvas.config(width=self.data_frame.winfo_width(), height=self.data_frame.winfo_height())
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        # self.canvas.config(width=self.data_frame.winfo_width(), height=self.data_frame.winfo_height())
+        # self.canvas.config(scrollregion=self.canvas.bbox("all"))
         self.vsb.config(command=self.canvas.yview)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -235,3 +344,4 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
     def resize_canvas(self, event):
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
+
