@@ -34,4 +34,4 @@ cd Academic-Performance-Management
 
 ## Data Sources
 
-- [Student's Scores](https://www.kaggle.com/datasets/56-rows-and-13-columns) - Kaggle dataset used in the application.
+- [Student's Scores](https://www.kaggle.com/datasets/yapwh1208/students-score) - Kaggle dataset used in the application.
