@@ -27,6 +27,17 @@ git clone https://github.com/Nanokwok/Academic-Performance-Management.git
 cd Academic-Performance-Management
 ```
 
+## How to run
+
+1. Install the required packages:
+```bash
+pip install -r requirements.txt
+```
+2. Run the application:
+```bash
+python APM.py
+```
+
 ## Project Documents
 
 - [Project Proposal](https://docs.google.com/document/d/11R-iiaoxBM3uOUnmBL-wqdtW7__TCA-o9l3oWIvOjXE/edit?usp=sharing)
