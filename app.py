@@ -102,7 +102,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.graph_frame = ttk.LabelFrame(self.button_frame, text="Generate Graphs")
         self.graph_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.one_student_button = ttk.Button(self.graph_frame, text="1 student", command=self.generate_graphs)
+        self.one_student_button = ttk.Button(self.graph_frame, text="1 student", command=self.one_student_graphs)
         self.one_student_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.two_or_more_button = ttk.Button(self.graph_frame, text="2 or more students", command=self.generate_graphs)
@@ -141,98 +141,109 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def group_students(self):
         pass
 
+    def one_student_graphs(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            messagebox.showwarning("Warning", "Please select a student to generate the graph.")
+            return
+        elif len(selected_item) > 1:
+            messagebox.showwarning("Warning", "Please select only one student to generate the graph.")
+            return
+        else:
+            graph_window = tk.Toplevel(self)
+            graph_window.title("Generate Graph")
+
+            graph_type_label = ttk.Label(graph_window, text="Select Graph Type:")
+            graph_type_label.grid(row=0, column=0, padx=5, pady=5)
+
+            graph_type_var = tk.StringVar()
+            graph_type_combobox = ttk.Combobox(graph_window, textvariable=graph_type_var, state="readonly",
+                                               values=["Bar Chart", "Histogram", "Scatterplot"])
+            graph_type_combobox.current(0)
+            graph_type_combobox.grid(row=0, column=1, padx=5, pady=5)
+
+            def generate_graph():
+                selected_graph_type = graph_type_var.get()
+                selected_items = self.tree.selection()
+                if not selected_items:
+                    messagebox.showwarning("Warning", "Please select one or more students to generate the graph.")
+                    return
+
+                scores_dict = {}
+                for selected_item in selected_items:
+                    student_id = self.tree.item(selected_item, "text")
+                    scores_str = self.tree.item(selected_item, "values")[1:]
+                    scores = [int(score) for score in scores_str]
+                    scores_dict[student_id] = scores
+
+                fig, ax = plt.subplots()
+                if selected_graph_type == "Bar Chart":
+                    # Generate Bar Chart
+                    for student_id, scores in scores_dict.items():
+                        ax.bar(range(1, len(scores) + 1), scores, label=student_id)
+                    ax.set_xlabel("Test")
+                    ax.set_ylabel("Score")
+                    ax.set_title("Bar Chart")
+                    # ax.legend()
+
+                    bar_graph_window = tk.Toplevel(self)
+                    bar_graph_window.title("Bar Graph")
+
+                    canvas = FigureCanvasTkAgg(fig, master=bar_graph_window)
+                    canvas.draw()
+                    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                    toolbar = NavigationToolbar2Tk(canvas, bar_graph_window)
+                    toolbar.update()
+                    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                elif selected_graph_type == "Histogram":
+                    for student_id, scores in scores_dict.items():
+                        ax.hist(scores, bins=10, alpha=0.5, label=student_id)
+                    ax.set_xlabel("Score")
+                    ax.set_ylabel("Frequency")
+                    ax.set_title("Histogram")
+                    # ax.legend()
+
+                    histogram_window = tk.Toplevel(self)
+                    histogram_window.title("Histogram")
+
+                    canvas = FigureCanvasTkAgg(fig, master=histogram_window)
+                    canvas.draw()
+                    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                    toolbar = NavigationToolbar2Tk(canvas, histogram_window)
+                    toolbar.update()
+                    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                elif selected_graph_type == "Scatterplot":
+                    for student_id, scores in scores_dict.items():
+                        plt.scatter(range(1, len(scores) + 1), scores, label=student_id)
+                    plt.xlabel("Test")
+                    plt.ylabel("Score")
+                    plt.title("Scatterplot")
+                    # plt.legend()
+                    plt.show()
+
+                    scatterplot_window = tk.Toplevel(self)
+                    scatterplot_window.title("Scatterplot")
+
+                    canvas = FigureCanvasTkAgg(fig, master=scatterplot_window)
+                    canvas.draw()
+                    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                    toolbar = NavigationToolbar2Tk(canvas, scatterplot_window)
+                    toolbar.update()
+                    canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+                else:
+                    messagebox.showerror("Error", "Invalid graph type selected.")
+
+            generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph)
+            generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+
     def generate_graphs(self):
-        graph_window = tk.Toplevel(self)
-        graph_window.title("Generate Graph")
-
-        graph_type_label = ttk.Label(graph_window, text="Select Graph Type:")
-        graph_type_label.grid(row=0, column=0, padx=5, pady=5)
-
-        graph_type_var = tk.StringVar()
-        graph_type_combobox = ttk.Combobox(graph_window, textvariable=graph_type_var, state="readonly",
-                                           values=["Bar Chart", "Histogram", "Scatterplot"])
-        graph_type_combobox.current(0)
-        graph_type_combobox.grid(row=0, column=1, padx=5, pady=5)
-
-        def generate_graph():
-            selected_graph_type = graph_type_var.get()
-            selected_items = self.tree.selection()
-            if not selected_items:
-                messagebox.showwarning("Warning", "Please select one or more students to generate the graph.")
-                return
-
-            scores_dict = {}
-            for selected_item in selected_items:
-                student_id = self.tree.item(selected_item, "text")
-                scores_str = self.tree.item(selected_item, "values")[1:]
-                scores = [int(score) for score in scores_str]
-                scores_dict[student_id] = scores
-
-            fig, ax = plt.subplots()
-            if selected_graph_type == "Bar Chart":
-                # Generate Bar Chart
-                for student_id, scores in scores_dict.items():
-                    ax.bar(range(1, len(scores) + 1), scores, label=student_id)
-                ax.set_xlabel("Test")
-                ax.set_ylabel("Score")
-                ax.set_title("Bar Chart")
-                # ax.legend()
-
-                bar_graph_window = tk.Toplevel(self)
-                bar_graph_window.title("Bar Graph")
-
-                canvas = FigureCanvasTkAgg(fig, master=bar_graph_window)
-                canvas.draw()
-                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-                toolbar = NavigationToolbar2Tk(canvas, bar_graph_window)
-                toolbar.update()
-                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-            elif selected_graph_type == "Histogram":
-                for student_id, scores in scores_dict.items():
-                    ax.hist(scores, bins=10, alpha=0.5, label=student_id)
-                ax.set_xlabel("Score")
-                ax.set_ylabel("Frequency")
-                ax.set_title("Histogram")
-                # ax.legend()
-
-                histogram_window = tk.Toplevel(self)
-                histogram_window.title("Histogram")
-
-                canvas = FigureCanvasTkAgg(fig, master=histogram_window)
-                canvas.draw()
-                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-                toolbar = NavigationToolbar2Tk(canvas, histogram_window)
-                toolbar.update()
-                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-            elif selected_graph_type == "Scatterplot":
-                for student_id, scores in scores_dict.items():
-                    plt.scatter(range(1, len(scores) + 1), scores, label=student_id)
-                plt.xlabel("Test")
-                plt.ylabel("Score")
-                plt.title("Scatterplot")
-                # plt.legend()
-                plt.show()
-
-                scatterplot_window = tk.Toplevel(self)
-                scatterplot_window.title("Scatterplot")
-
-                canvas = FigureCanvasTkAgg(fig, master=scatterplot_window)
-                canvas.draw()
-                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-                toolbar = NavigationToolbar2Tk(canvas, scatterplot_window)
-                toolbar.update()
-                canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-            else:
-                messagebox.showerror("Error", "Invalid graph type selected.")
-
-        generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph)
-        generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+        pass
 
     # def show_individual_statistics(self):
     #     selected_id = self.tree.focus()
