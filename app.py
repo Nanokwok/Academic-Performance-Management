@@ -335,7 +335,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
                     toolbar.update()
                     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-            generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph())
+            generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph)
             generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
     def more_student_graphs(self):
