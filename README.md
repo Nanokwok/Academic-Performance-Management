@@ -20,20 +20,20 @@ multiple students.
 
 ## Screenshots
 - Main Page
-![0program.jpg](screenshots%2F0program.jpg)
+![0program.jpg](pictures%2Fscreenshots%2F0program.jpg)
 - Import/Remove Students
-![import_file.jpg](screenshots%2Fimport_file.jpg)
+![import_file.jpg](pictures%2Fscreenshots%2Fimport_file.jpg)
 - Group Students
-![grouping_student.jpg](screenshots%2Fgrouping_student.jpg)
+![grouping_student.jpg](pictures%2Fscreenshots%2Fgrouping_student.jpg)
 - Generate Graphs
-![one_student_graph.jpg](screenshots%2Fone_student_graph.jpg)
-![many_student_graph.jpg](screenshots%2Fmany_student_graph.jpg)
+![one_student_graph.jpg](pictures%2Fscreenshots%2Fone_student_graph.jpg)
+![many_student_graph.jpg](pictures%2Fscreenshots%2Fmany_student_graph.jpg)
 - Display Statistics
-![statistic.jpg](screenshots%2Fstatistic.jpg)
+![statistic.jpg](pictures%2Fscreenshots%2Fstatistic.jpg)
 - Data Storytelling Page
-![storytelling01.jpg](screenshots%2Fdata%2Fstorytelling01.jpg)
-![storytelling02.jpg](screenshots%2Fdata%2Fstorytelling02.jpg)
-![storytelling03.jpg](screenshots%2Fdata%2Fstorytelling03.jpg)
+![storytelling01.jpg](pictures%2Fscreenshots%2Fdata%2Fstorytelling01.jpg)
+![storytelling02.jpg](pictures%2Fscreenshots%2Fdata%2Fstorytelling02.jpg)
+![storytelling03.jpg](pictures%2Fscreenshots%2Fdata%2Fstorytelling03.jpg)
 
 ## Installation
 
