@@ -15,7 +15,7 @@ multiple students.
 - Add or remove students from the list
 - Group students based on test scores (students with similar scores stay together, or arrange the scores of all groups to be as similar as possible)
 - Generate basic graphs for selected students (bar charts, histograms, scatter plots, box plots)
-- Display fundamental statistics for individual or multiple students (min, max, average, sum)
+- Display fundamental statistics for individual or multiple students (min, max, average, standard deviation, median)
 - Data storytelling page to visualize student performance and grade distribution
 
 
