@@ -55,7 +55,12 @@ python main.py
 - [Project Proposal](https://docs.google.com/document/d/11R-iiaoxBM3uOUnmBL-wqdtW7__TCA-o9l3oWIvOjXE/edit?usp=sharing)
 - [Weekly Plan](https://github.com/Nanokwok/Academic-Performance-Management/wiki/Weekly-Plan)
 - Class Diagram
-![APM UML ClassDiagram.jpeg](pictures%2FAPM%20UML%20ClassDiagram.jpeg)
+![APM UML ClassDiagram.jpeg](pictures%2FClass%20diagram%2FAPM%20UML%20ClassDiagram.jpeg)
+
+- Sequence Diagram
+![seqence01.jpg](pictures%2FSeqence%20diagram%2Fseqence01.jpg)
+![seqence02.jpg](pictures%2FSeqence%20diagram%2Fseqence02.jpg)
+![seqence03.jpg](pictures%2FSeqence%20diagram%2Fseqence03.jpg)
 
 ## Data Sources
 
