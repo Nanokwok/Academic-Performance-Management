@@ -29,6 +29,9 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.create_buttons()
         self.create_menu()
 
+        story_telling_button = ttk.Button(self.button_frame, text="Story Telling", command=self.story_telling_page)
+        story_telling_button.grid(row=5, column=0, padx=5, pady=5, sticky="ew")
+
         self.bind("<Configure>", self.resize)
         self.import_data()
 
