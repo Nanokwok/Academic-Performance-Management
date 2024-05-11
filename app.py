@@ -754,6 +754,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             self.enable_all_students_button()
 
     def delete_data(self):
+        """ Delete all data from the Treeview."""
         self.tree.delete(*self.tree.get_children())
         self.disable_all_students_button()
 
