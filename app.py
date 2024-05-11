@@ -1,3 +1,4 @@
+import math
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import csv
@@ -90,11 +91,12 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.group_input_box = ttk.Entry(self.group_frame)
         self.group_input_box.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
-        self.similar_button = ttk.Button(self.group_frame, text="Similar score together", command=self.group_students)
+        self.similar_button = ttk.Button(self.group_frame, text="Similar score together",
+                                         command=self.group_students_sim)
         self.similar_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
-        self.every_group_button = ttk.Button(self.group_frame, text="Every group same performance",
-                                             command=self.group_students)
+        self.every_group_button = ttk.Button(self.group_frame, text="Different score together",
+                                             command=self.group_students_dif)
         self.every_group_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_graph_buttons(self):
@@ -128,9 +130,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         self.disable_all_students_button()
 
-    def add_student(self):
-        pass
-
     def delete_student(self):
         selected_item = self.tree.focus()
         if selected_item:
@@ -138,7 +137,58 @@ class AcademicPerformanceManagementApp(tk.Tk):
         else:
             messagebox.showwarning("Warning", "Please select a student to delete.")
 
-    def group_students(self):
+    def group_students_sim(self):
+        total_students = self.tree.get_children()
+        if not total_students:
+            messagebox.showwarning("Warning", "No students found in the Treeview.")
+            return
+
+        total_group = self.group_input_box.get()
+        if not total_group:
+            messagebox.showwarning("Warning", "Please enter total group number.")
+            return
+
+        if total_group == 0:
+            messagebox.showwarning("Warning", "Please enter total group number > 0.")
+
+        num_groups = int(total_group)
+        num_students = len(total_students)
+
+        student_scores = []
+        for item in total_students:
+            student_id = self.tree.item(item, "text")
+            scores_str = self.tree.item(item, "values")[1:]
+            scores = [int(score) for score in scores_str]
+            mid_score = statistics.median(scores)
+            student_scores.append((student_id, mid_score))
+
+        student_scores.sort(key=lambda x: x[1], reverse=True)
+
+        groups = [[] for _ in range(num_groups)]
+        group_size, remainder = divmod(num_students, num_groups)
+
+        for i, student in enumerate(student_scores):
+            group_index = i // group_size if remainder == 0 else i // (group_size + 1)
+            groups[group_index].append(student[0])
+
+        print(groups)
+
+        group_window = tk.Toplevel(self)
+        group_window.title("Student Groups")
+
+        columns = tuple([f"Group {i + 1}" for i in range(num_groups)])
+        tree = ttk.Treeview(group_window, columns=columns, show="headings")
+
+        for col in columns:
+            tree.heading(col, text=col)
+
+        for i in range(max(len(group) for group in groups)):
+            values = [group[i] if i < len(group) else "" for group in groups]
+            tree.insert("", "end", values=values)
+
+        tree.pack(expand=True, fill="both")
+
+    def group_students_dif(self):
         pass
 
     def one_student_graphs(self):
@@ -423,8 +473,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
             elif selected_graph_type == "Histogram":
-                # X-axis Label: Test Score (median of all test each student)
-                # Y-axis Label: Frequency (Number of Tests)
                 scores = []
                 for student_id, student_scores in scores_dict.items():
                     scores.append(statistics.median(student_scores))
