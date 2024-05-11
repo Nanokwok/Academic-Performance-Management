@@ -1,4 +1,4 @@
-import math
+""" import importable modules """
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import csv
@@ -35,6 +35,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.import_data()
 
     def create_student_data_table(self):
+        """ Create a Treeview widget to display student data."""
         self.data_frame.grid_rowconfigure(0, weight=1)
         self.data_frame.grid_columnconfigure(0, weight=1)
 
@@ -58,12 +59,14 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.tree.configure(xscrollcommand=self.hsb.set)
 
     def create_buttons(self):
+        """ Create buttons."""
         self.create_add_del_buttons()
         self.create_group_buttons()
         self.create_graph_buttons()
         self.create_stats_buttons()
 
     def create_add_del_buttons(self):
+        """ Create Add/Del student buttons."""
         self.add_del_frame = ttk.LabelFrame(self.button_frame, text="Add/Del student")
         self.add_del_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -74,6 +77,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.delete_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_group_buttons(self):
+        """ Create Group student buttons."""
         self.group_frame = ttk.LabelFrame(self.button_frame, text="Grouping student")
         self.group_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -89,6 +93,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.every_group_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_graph_buttons(self):
+        """ Create Generate Graph buttons."""
         self.graph_frame = ttk.LabelFrame(self.button_frame, text="Generate Graphs")
         self.graph_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -103,6 +108,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.all_students_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_stats_buttons(self):
+        """ Create Show Statistics buttons."""
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -116,6 +122,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.disable_all_students_button()
 
     def delete_student(self):
+        """ Delete a student from the Treeview."""
         selected_item = self.tree.focus()
         if selected_item:
             self.tree.delete(selected_item)
@@ -123,6 +130,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             messagebox.showwarning("Warning", "Please select a student to delete.")
 
     def group_students_sim(self):
+        """ Group students with similar scores together."""
         total_students = self.tree.get_children()
         if not total_students:
             messagebox.showwarning("Warning", "No students found in the Treeview.")
@@ -181,6 +189,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         tree.pack(expand=True, fill="both")
 
     def group_students_dif(self):
+        """ Group students with different scores together."""
         total_students = self.tree.get_children()
         if not total_students:
             messagebox.showwarning("Warning", "No students found in the Treeview.")
@@ -239,6 +248,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         tree.pack(expand=True, fill="both")
 
     def one_student_graphs(self):
+        """ Generate graphs for one student."""
         selected_item = self.tree.selection()
         if not selected_item:
             messagebox.showwarning("Warning", "Please select a student to generate the graph.")
@@ -326,6 +336,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
     def more_student_graphs(self):
+        """ Generate graphs for two or more students."""
         selected_items = self.tree.selection()
         if not selected_items:
             messagebox.showwarning("Warning", "Please select a student to generate the graph.")
@@ -464,6 +475,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
     def all_student_graphs(self):
+        """ Generate graphs for all students."""
         selected_items = self.tree.get_children()
 
         graph_window = tk.Toplevel(self)
@@ -596,6 +608,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
     def show_selected_statistics(self):
+        """ Show statistics for selected students."""
         selected_items = self.tree.selection()
         if selected_items:
             statistics_window = tk.Toplevel(self)
@@ -630,6 +643,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             messagebox.showwarning("Warning", "Please select one or more students to view statistics.")
 
     def show_all_statistics(self):
+        """ Show statistics for all students."""
         if not self.tree.get_children():
             messagebox.showwarning("Warning", "No data available. Please import data first.")
             return
@@ -663,12 +677,15 @@ class AcademicPerformanceManagementApp(tk.Tk):
         statistics_tree.pack(expand=True, fill="both")
 
     def enable_all_students_button(self):
+        """ Enable the All Students button."""
         self.allstu_button["state"] = "normal"
 
     def disable_all_students_button(self):
+        """ Disable the All Students button."""
         self.allstu_button["state"] = "disabled"
 
     def import_data(self):
+        """ Import data from a CSV file."""
         file_path = "student_marks.csv"
         if file_path:
             for child in self.tree.get_children():
@@ -686,6 +703,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             self.enable_all_students_button()
 
     def resize(self, event):
+        """ Resize the widgets."""
         self.button_frame.grid_configure(sticky="nsew")
         self.data_frame.grid_configure(sticky="nsew")
         self.grid_rowconfigure(0, weight=1)
@@ -693,4 +711,5 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.grid_columnconfigure(1, weight=0)
 
     def resize_canvas(self, event):
+        """ Resize the canvas."""
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
