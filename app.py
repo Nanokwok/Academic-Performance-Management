@@ -16,8 +16,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         hight = self.winfo_screenheight()
 
         self.geometry(f"{width}x{hight}")
-        # self.configure(width=self.winfo_width())
-        # print(width, hight)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -60,9 +58,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.tree.configure(xscrollcommand=self.hsb.set)
 
     def create_buttons(self):
-        # self.import_button = ttk.Button(self.button_frame, text="Import Data", command=self.import_data)
-        # self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-
         self.create_add_del_buttons()
         self.create_group_buttons()
         self.create_graph_buttons()
@@ -72,14 +67,8 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.add_del_frame = ttk.LabelFrame(self.button_frame, text="Add/Del student")
         self.add_del_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        # self.input_box = ttk.Entry(self.add_del_frame)
-        # self.input_box.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-
         self.import_button = ttk.Button(self.add_del_frame, text="Import Data", command=self.import_data)
         self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
-
-        # self.add_button = ttk.Button(self.add_del_frame, text="Add Student", command=self.add_student)
-        # self.add_button.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
         self.delete_button = ttk.Button(self.add_del_frame, text="Delete Student", command=self.delete_student)
         self.delete_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
@@ -116,10 +105,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def create_stats_buttons(self):
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
-
-        # self.individual_button = ttk.Button(self.stats_frame, text="Individual",
-        # command=self.show_individual_statistics)
-        # self.individual_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.selected_button = ttk.Button(self.stats_frame, text="Selected Student",
                                           command=self.show_selected_statistics)
@@ -610,34 +595,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph)
         generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
-    # def show_individual_statistics(self):
-    #     selected_id = self.tree.focus()
-    #     if selected_id:
-    #         student_id = self.tree.item(selected_id, "text")
-    #         scores_str = self.tree.item(selected_id, "values")[1:]
-    #
-    #         scores = []
-    #         for score in scores_str:
-    #             if score:
-    #                 scores.append(int(score))
-    #
-    #         maxx = max(scores)
-    #         minn = min(scores)
-    #         avg = statistics.mean(scores)
-    #         stdev = statistics.stdev(scores)
-    #
-    #         statistics_func = tk.Toplevel(self)
-    #         statistics_func.title(f"Statistics for Student ID {student_id}")
-    #
-    #         tk.Label(statistics_func, text="Statistics:").pack()
-    #         tk.Label(statistics_func, text=f"Student ID: {student_id}").pack()
-    #         tk.Label(statistics_func, text=f"Max Score: {maxx}").pack()
-    #         tk.Label(statistics_func, text=f"Min Score: {minn}").pack()
-    #         tk.Label(statistics_func, text=f"Avg Score: {avg}").pack()
-    #         tk.Label(statistics_func, text=f"Standard Deviation: {stdev}").pack()
-    #     else:
-    #         messagebox.showwarning("Warning", "Please select a student to view statistics.")
-
     def show_selected_statistics(self):
         selected_items = self.tree.selection()
         if selected_items:
@@ -731,9 +688,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def resize(self, event):
         self.button_frame.grid_configure(sticky="nsew")
         self.data_frame.grid_configure(sticky="nsew")
-        # self.canvas.config(width=self.data_frame.winfo_width(), height=self.data_frame.winfo_height())
-        # self.canvas.config(scrollregion=self.canvas.bbox("all"))
-        # self.vsb.config(command=self.canvas.yview)
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
