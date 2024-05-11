@@ -271,7 +271,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
             graph_type_var = tk.StringVar()
             graph_type_combobox = ttk.Combobox(graph_window, textvariable=graph_type_var, state="readonly",
-                                               values=["Bar Chart", "Histogram", "Scatterplot"])
+                                               values=["Bar Chart", "Histogram"])
             graph_type_combobox.current(0)
             graph_type_combobox.grid(row=0, column=1, padx=5, pady=5)
 
@@ -279,7 +279,8 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 selected_graph_type = graph_type_var.get()
                 selected_items = self.tree.selection()
                 if not selected_items:
-                    messagebox.showwarning("Warning", "Please select one or more students to generate the graph.")
+                    messagebox.showwarning("Warning", "Please select one or more students to "
+                                                      "generate the graph.")
                     return
 
                 scores_dict = {}
@@ -322,7 +323,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
                     ax.set_xlabel("Score")
                     ax.set_ylabel("Frequency")
                     ax.set_title("Histogram")
-                    # ax.legend()
 
                     histogram_window = tk.Toplevel(self)
                     histogram_window.title("Histogram")
@@ -334,9 +334,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
                     toolbar = NavigationToolbar2Tk(canvas, histogram_window)
                     toolbar.update()
                     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
-
-                else:
-                    messagebox.showerror("Error", "Invalid graph type selected.")
 
             generate_button = ttk.Button(graph_window, text="Generate Graph", command=generate_graph())
             generate_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
