@@ -720,9 +720,14 @@ class AcademicPerformanceManagementApp(tk.Tk):
             self.enable_all_students_button()
 
     def import_new_data(self):
+        """ Import new data from a CSV file."""
+        try:
+            file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
+            return
         self.delete_data()
 
-        file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
         if file_path:
             with open(file_path, "r") as file:
                 reader = csv.reader(file)
