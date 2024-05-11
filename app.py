@@ -10,6 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class AcademicPerformanceManagementApp(tk.Tk):
     def __init__(self):
+        """ Initialize the application."""
         super().__init__()
         self.title("Academic Performance Management")
         self.geometry(f"{self.winfo_screenwidth()}x{self.winfo_screenheight()}")
@@ -32,6 +33,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.import_data()
 
     def create_student_data_table(self):
+        """ Create a Treeview to display student data."""
         self.data_frame.grid_rowconfigure(0, weight=1)
         self.data_frame.grid_columnconfigure(0, weight=1)
 
@@ -52,12 +54,14 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.tree.configure(xscrollcommand=self.hsb.set)
 
     def create_buttons(self):
+        """ Create buttons for the application."""
         self.create_add_del_buttons()
         self.create_group_buttons()
         self.create_graph_buttons()
         self.create_stats_buttons()
 
     def create_add_del_buttons(self):
+        """ Create buttons for adding and deleting students."""
         self.add_del_frame = ttk.LabelFrame(self.button_frame, text="Add/Del student")
         self.add_del_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -68,6 +72,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.delete_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_group_buttons(self):
+        """ Create buttons for grouping students."""
         self.group_frame = ttk.LabelFrame(self.button_frame, text="Grouping student")
         self.group_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -83,6 +88,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.every_group_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_graph_buttons(self):
+        """ Create buttons for generating graphs."""
         self.graph_frame = ttk.LabelFrame(self.button_frame, text="Generate Graphs")
         self.graph_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -97,6 +103,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.all_students_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_stats_buttons(self):
+        """ Create buttons for showing statistics."""
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -110,6 +117,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.disable_all_students_button()
 
     def create_menu(self):
+        """ Create a menu for exiting the application."""
         menu = tk.Menu(self)
         self.config(menu=menu)
 
@@ -118,6 +126,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         file_menu.add_command(label="Exit", command=self.quit)
 
     def delete_student(self):
+        """ Delete a student from the Treeview."""
         selected_item = self.tree.focus()
         if selected_item:
             self.tree.delete(selected_item)
