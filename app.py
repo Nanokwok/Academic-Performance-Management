@@ -726,6 +726,8 @@ class AcademicPerformanceManagementApp(tk.Tk):
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {e}")
             return
+        if file_path == "":
+            return
         self.delete_data()
 
         if file_path:
@@ -763,8 +765,96 @@ class AcademicPerformanceManagementApp(tk.Tk):
         story_window = tk.Toplevel(self)
         story_window.title("Story Telling")
 
-        story_label = ttk.Label(story_window, text="This is a story telling page.")
+        # Create a notebook to hold the different pages
+        notebook = ttk.Notebook(story_window)
+        notebook.pack(fill="both", expand=True)
+
+        # Introduction Page
+        introduction_page = ttk.Frame(notebook)
+        notebook.add(introduction_page, text="Introduction")
+        introduction_label = ttk.Label(introduction_page, text=("\n""This is the story telling page.\n\n"
+                                                                "This page will separate students into different groups "
+                                                                "based on their median score.\n\n"
+                                                                "Grades: A, B+, B, C+, C, D+, D, F.\n\n"
+                                                                "This page will also show the grade distribution "
+                                                                "in a pie chart."),
+                                       anchor='center', justify='center', font=("Helvetica", 16))
+
+        introduction_label.pack()
+
+        # Grade Page
+        grade_page = ttk.Frame(notebook)
+        notebook.add(grade_page, text="Grade")
+
+        grade_tree = ttk.Treeview(grade_page, columns=("Median Score", "Grade"))
+        grade_tree.heading("#0", text="Student ID")
+        grade_tree.heading("Median Score", text="Median Score")
+        grade_tree.heading("Grade", text="Grade")
+
+        grade_ranges = [
+            (90, 100, "A"),
+            (85, 89, "B+"),
+            (80, 84, "B"),
+            (75, 79, "C+"),
+            (70, 74, "C"),
+            (65, 69, "D+"),
+            (60, 64, "D"),
+            (0, 59, "F")
+        ]
+
+        for child in self.tree.get_children():
+            student_id = self.tree.item(child, "text")
+            scores_str = self.tree.item(child, "values")[1:]
+            scores = [int(score) for score in scores_str]
+            median_score = statistics.median(scores)
+
+            for min_score, max_score, grade in grade_ranges:
+                if min_score <= median_score <= max_score:
+                    grade_tree.insert("", "end", text=student_id, values=(f"{median_score:.2f}", grade))
+                    break
+
+        grade_tree.pack(expand=True, fill="both")
+
+        # Story Telling Page
+        story_page = ttk.Frame(notebook)
+        notebook.add(story_page, text="Story Telling")
+
+        story_label = ttk.Label(story_page, text="This is the story telling page.")
         story_label.pack()
+
+        # Create a pie chart to show the grade distribution
+        grade_counts = {grade: 0 for grade in ["A", "B+", "B", "C+", "C", "D+", "D", "F"]}
+
+        for child in self.tree.get_children():
+            scores_str = self.tree.item(child, "values")[1:]
+            scores = [int(score) for score in scores_str]
+            median_score = statistics.median(scores)
+
+            for min_score, max_score, grade in grade_ranges:
+                if min_score <= median_score <= max_score:
+                    grade_counts[grade] += 1
+                    break
+
+        grades = []
+        counts = []
+
+        for grade, count in grade_counts.items():
+            if count > 0:
+                grades.append(grade)
+                counts.append(count)
+
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.pie(counts, labels=grades, autopct='%1.1f%%', counterclock=False, startangle=90)
+        ax.axis('equal')
+        ax.set_title('Grade Distribution')
+
+        canvas = FigureCanvasTkAgg(fig, master=story_page)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        toolbar = NavigationToolbar2Tk(canvas, story_page)
+        toolbar.update()
+        canvas.get_tk_widget().pack()
 
     def resize(self, event):
         """ Resize the widgets."""
