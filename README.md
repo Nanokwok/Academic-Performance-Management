@@ -58,6 +58,8 @@ python main.py
 
 - [Project Proposal](https://docs.google.com/document/d/11R-iiaoxBM3uOUnmBL-wqdtW7__TCA-o9l3oWIvOjXE/edit?usp=sharing)
 - [Weekly Plan](https://github.com/Nanokwok/Academic-Performance-Management/wiki/Weekly-Plan)
+- Class Diagram
+![APM UML ClassDiagram.jpeg](pictures%2FAPM%20UML%20ClassDiagram.jpeg)
 
 ## Data Sources
 
