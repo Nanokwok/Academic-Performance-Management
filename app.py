@@ -29,6 +29,9 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         self.create_student_data_table()
         self.create_buttons()
+        story_telling = ttk.Button(self.button_frame, text="Story Telling", command=self.story_telling_page)
+        story_telling.grid(row=5, column=0, padx=10, pady=10, sticky="nsew")
+
         menu = tk.Menu(self)
         self.config(menu=menu)
 
@@ -704,6 +707,15 @@ class AcademicPerformanceManagementApp(tk.Tk):
             self.tree.column("#0", width=100, anchor="center")
 
             self.enable_all_students_button()
+
+    def story_telling_page(self):
+        """ Create a new window for Story Telling page."""
+        story_window = tk.Toplevel(self)
+        story_window.title("Story Telling")
+
+        story_label = ttk.Label(story_window, text="This is a story telling page.")
+        story_label.pack()
+
 
     def resize(self, event):
         """ Resize the widgets."""
