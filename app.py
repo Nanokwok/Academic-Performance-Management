@@ -780,7 +780,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         introduction_label.pack()
 
-        # Grade Page
         grade_page = ttk.Frame(notebook)
         notebook.add(grade_page, text="Grade")
 
@@ -813,14 +812,12 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         grade_tree.pack(expand=True, fill="both")
 
-        # Story Telling Page
         story_page = ttk.Frame(notebook)
         notebook.add(story_page, text="Story Telling")
 
         story_label = ttk.Label(story_page, text="This is the story telling page.")
         story_label.pack()
 
-        # Create a pie chart to show the grade distribution
         grade_counts = {grade: 0 for grade in ["A", "B+", "B", "C+", "C", "D+", "D", "F"]}
 
         for child in self.tree.get_children():
