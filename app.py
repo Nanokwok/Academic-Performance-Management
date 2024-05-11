@@ -361,6 +361,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
             graph_type_combobox.grid(row=0, column=1, padx=5, pady=5)
 
             def generate_graph():
+                """ Generate the graph."""
                 selected_graph_type = graph_type_var.get()
 
                 scores_dict = {}
@@ -763,11 +764,9 @@ class AcademicPerformanceManagementApp(tk.Tk):
         story_window = tk.Toplevel(self)
         story_window.title("Story Telling")
 
-        # Create a notebook to hold the different pages
         notebook = ttk.Notebook(story_window)
         notebook.pack(fill="both", expand=True)
 
-        # Introduction Page
         introduction_page = ttk.Frame(notebook)
         notebook.add(introduction_page, text="Introduction")
         introduction_label = ttk.Label(introduction_page, text=("\n""This is the story telling page.\n\n"
