@@ -158,20 +158,27 @@ class AcademicPerformanceManagementApp(tk.Tk):
         for item in total_students:
             student_id = self.tree.item(item, "text")
             scores_str = self.tree.item(item, "values")[1:]
-            scores = [int(score) for score in scores_str]
+
+            scores = []
+            for score_str in scores_str:
+                scores.append(int(score_str))
+
             mid_score = statistics.median(scores)
             student_scores.append((student_id, mid_score))
 
         student_scores.sort(key=lambda x: x[1], reverse=True)
 
-        groups = [[] for _ in range(num_groups)]
-        group_size, remainder = divmod(num_students, num_groups)
+        groups = []
+
+        for _ in range(num_groups):
+            groups.append([])
+
+        group_size = num_students // num_groups
+        remainder = num_students % num_groups
 
         for i, student in enumerate(student_scores):
             group_index = i // group_size if remainder == 0 else i // (group_size + 1)
             groups[group_index].append(student[0])
-
-        print(groups)
 
         group_window = tk.Toplevel(self)
         group_window.title("Student Groups")
@@ -189,7 +196,62 @@ class AcademicPerformanceManagementApp(tk.Tk):
         tree.pack(expand=True, fill="both")
 
     def group_students_dif(self):
-        pass
+        total_students = self.tree.get_children()
+        if not total_students:
+            messagebox.showwarning("Warning", "No students found in the Treeview.")
+            return
+
+        total_group = self.group_input_box.get()
+        if not total_group:
+            messagebox.showwarning("Warning", "Please enter total group number.")
+            return
+
+        if total_group == 0:
+            messagebox.showwarning("Warning", "Please enter total group number > 0.")
+
+        num_groups = int(total_group)
+        num_students = len(total_students)
+
+        student_scores = []
+        for item in total_students:
+            student_id = self.tree.item(item, "text")
+            scores_str = self.tree.item(item, "values")[1:]
+
+            scores = []
+            for score_str in scores_str:
+                scores.append(int(score_str))
+
+            mid_score = statistics.median(scores)
+            student_scores.append((student_id, mid_score))
+
+        student_scores.sort(key=lambda x: x[1])
+
+        groups = []
+
+        for _ in range(num_groups):
+            groups.append([])
+
+        group_size = num_students // num_groups
+        remainder = num_students % num_groups
+
+        for i, student in enumerate(student_scores):
+            group_index = i // group_size if remainder == 0 else i // (group_size + 1)
+            groups[group_index].append(student[0])
+
+        group_window = tk.Toplevel(self)
+        group_window.title("Student Groups")
+
+        columns = tuple([f"Group {i + 1}" for i in range(num_groups)])
+        tree = ttk.Treeview(group_window, columns=columns, show="headings")
+
+        for col in columns:
+            tree.heading(col, text=col)
+
+        for i in range(max(len(group) for group in groups)):
+            values = [group[i] if i < len(group) else "" for group in groups]
+            tree.insert("", "end", values=values)
+
+        tree.pack(expand=True, fill="both")
 
     def one_student_graphs(self):
         selected_item = self.tree.selection()
