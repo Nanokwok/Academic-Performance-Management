@@ -12,10 +12,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Academic Performance Management")
-        width = self.winfo_screenwidth()
-        hight = self.winfo_screenheight()
-
-        self.geometry(f"{width}x{hight}")
+        self.geometry(f"{self.winfo_screenwidth()}x{self.winfo_screenheight()}")
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -29,29 +26,16 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         self.create_student_data_table()
         self.create_buttons()
-        story_telling = ttk.Button(self.button_frame, text="Story Telling", command=self.story_telling_page)
-        story_telling.grid(row=5, column=0, padx=10, pady=10, sticky="nsew")
-
-        menu = tk.Menu(self)
-        self.config(menu=menu)
-
-        file_menu = tk.Menu(menu, tearoff=0)
-        menu.add_cascade(label="Exit", menu=file_menu)
-        file_menu.add_command(label="Exit", command=self.quit)
+        self.create_menu()
 
         self.bind("<Configure>", self.resize)
-
         self.import_data()
 
     def create_student_data_table(self):
-        """ Create a Treeview widget to display student data."""
         self.data_frame.grid_rowconfigure(0, weight=1)
         self.data_frame.grid_columnconfigure(0, weight=1)
 
-        self.tree = ttk.Treeview(self.data_frame,
-                                 columns=["ID", "Test 1", "Test 2", "Test 3", "Test 4", "Test 5", "Test 6", "Test 7",
-                                          "Test 8", "Test 9", "Test 10", "Test 11", "Test 12"], show="headings")
-
+        self.tree = ttk.Treeview(self.data_frame, columns=["ID"] + [f"Test {i}" for i in range(1, 13)], show="headings")
         self.tree.heading("ID", text="Student ID", anchor="center")
 
         for i in range(1, 13):
@@ -68,14 +52,12 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.tree.configure(xscrollcommand=self.hsb.set)
 
     def create_buttons(self):
-        """ Create buttons."""
         self.create_add_del_buttons()
         self.create_group_buttons()
         self.create_graph_buttons()
         self.create_stats_buttons()
 
     def create_add_del_buttons(self):
-        """ Create Add/Del student buttons."""
         self.add_del_frame = ttk.LabelFrame(self.button_frame, text="Add/Del student")
         self.add_del_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -86,7 +68,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.delete_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_group_buttons(self):
-        """ Create Group student buttons."""
         self.group_frame = ttk.LabelFrame(self.button_frame, text="Grouping student")
         self.group_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -102,7 +83,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.every_group_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_graph_buttons(self):
-        """ Create Generate Graph buttons."""
         self.graph_frame = ttk.LabelFrame(self.button_frame, text="Generate Graphs")
         self.graph_frame.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -117,7 +97,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.all_students_button.grid(row=2, column=0, padx=5, pady=5, sticky="ew")
 
     def create_stats_buttons(self):
-        """ Create Show Statistics buttons."""
         self.stats_frame = ttk.LabelFrame(self.button_frame, text="Show Statistics")
         self.stats_frame.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -130,8 +109,15 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         self.disable_all_students_button()
 
+    def create_menu(self):
+        menu = tk.Menu(self)
+        self.config(menu=menu)
+
+        file_menu = tk.Menu(menu, tearoff=0)
+        menu.add_cascade(label="Exit", menu=file_menu)
+        file_menu.add_command(label="Exit", command=self.quit)
+
     def delete_student(self):
-        """ Delete a student from the Treeview."""
         selected_item = self.tree.focus()
         if selected_item:
             self.tree.delete(selected_item)
