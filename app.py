@@ -319,7 +319,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
                     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-
                 elif selected_graph_type == "Histogram":
                     for student_id, scores in scores_dict.items():
                         ax.hist(scores, bins=10, alpha=0.5, label=student_id)
@@ -698,13 +697,25 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 self.tree.delete(child)
             with open(file_path, "r") as file:
                 reader = csv.reader(file)
-                header = next(reader)
+                headers = next(reader, None)
+
+                if headers is None:
+                    messagebox.showerror("Error", "The CSV file is empty.")
+                    return
+
+                self.tree["columns"] = ["ID"] + headers[1:]
+                self.tree.heading("#0", text="ID")
+                for col_index, col in enumerate(self.tree["columns"], start=1):
+                    self.tree.heading(col, text=headers[col_index - 1])
+
                 for row in reader:
                     student_id = row[0]
                     scores = row[1:]
-                    self.tree.insert("", "end", text=student_id, values=scores)
+                    self.tree.insert("", "end", text=student_id, values=[student_id] + scores)
 
             self.tree.column("#0", width=100, anchor="center")
+            for col in self.tree["columns"]:
+                self.tree.column(col, width=100, anchor="center")
 
             self.enable_all_students_button()
 
@@ -715,7 +726,6 @@ class AcademicPerformanceManagementApp(tk.Tk):
 
         story_label = ttk.Label(story_window, text="This is a story telling page.")
         story_label.pack()
-
 
     def resize(self, event):
         """ Resize the widgets."""
