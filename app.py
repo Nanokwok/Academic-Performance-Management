@@ -79,7 +79,7 @@ class AcademicPerformanceManagementApp(tk.Tk):
         self.add_del_frame = ttk.LabelFrame(self.button_frame, text="Add/Del student")
         self.add_del_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.import_button = ttk.Button(self.add_del_frame, text="Import Data", command=self.import_data)
+        self.import_button = ttk.Button(self.add_del_frame, text="Import Data", command=self.import_new_data)
         self.import_button.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
         self.delete_button = ttk.Button(self.add_del_frame, text="Delete Student", command=self.delete_student)
@@ -718,6 +718,39 @@ class AcademicPerformanceManagementApp(tk.Tk):
                 self.tree.column(col, width=100, anchor="center")
 
             self.enable_all_students_button()
+
+    def import_new_data(self):
+        self.delete_data()
+
+        file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+        if file_path:
+            with open(file_path, "r") as file:
+                reader = csv.reader(file)
+                headers = next(reader, None)
+
+                if headers is None:
+                    messagebox.showerror("Error", "The CSV file is empty.")
+                    return
+
+                self.tree["columns"] = ["ID"] + headers[1:]
+                self.tree.heading("#0", text="ID")
+                for col_index, col in enumerate(self.tree["columns"], start=1):
+                    self.tree.heading(col, text=headers[col_index - 1])
+
+                for row in reader:
+                    student_id = row[0]
+                    scores = row[1:]
+                    self.tree.insert("", "end", text=student_id, values=[student_id] + scores)
+
+            self.tree.column("#0", width=100, anchor="center")
+            for col in self.tree["columns"]:
+                self.tree.column(col, width=100, anchor="center")
+
+            self.enable_all_students_button()
+
+    def delete_data(self):
+        self.tree.delete(*self.tree.get_children())
+        self.disable_all_students_button()
 
     def story_telling_page(self):
         """ Create a new window for Story Telling page."""
